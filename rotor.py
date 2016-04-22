@@ -18,7 +18,7 @@ class Rotor:
     def rotate(self, clockwise, distance):
         if not clockwise:
             distance = len(self.alphabet) - distance
-        return self.alphabet[distance]
+        return self.alphabet[distance % len(self.alphabet)]
 
     def get_distance(self, to):
         for i in range(0, len(self.alphabet)):

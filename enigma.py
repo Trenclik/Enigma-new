@@ -14,3 +14,10 @@ class Enigma:
             distance = self.rotors[i % 2].get_distance(char)
             cipher += self.rotors[2].rotate((i + 1) % 2, distance)
         return cipher
+
+    def decrypt(self, cipher):
+        word = ''
+        for i, char in enumerate(cipher.upper()):
+            distance = self.rotors[2].get_distance(char)
+            word += self.rotors[i % 2].rotate((i + 1) % 2, distance)
+        return word
