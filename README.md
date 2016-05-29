@@ -4,6 +4,9 @@ The Enigma machines were a series of electro-mechanical rotor cipher machines de
 
 <img src="http://cdn3.notonthehighstreet.com/system/product_images/images/002/256/850/original_enigma-ii-encryption-machine-and-puzzle.jpg" alt="Enigma-Machine" width="500" height="400">
 
+## Usage
+python3 enigma.py --help
+
 ## Task
 
 * Simulate a simplified Version of the Enigma encryption machine
