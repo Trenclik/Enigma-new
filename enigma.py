@@ -1,28 +1,46 @@
 from rotor import Rotor
 import sys
-import getopt
 
 
 class Enigma:
     def __init__(self, key, rotors):
-        self.key = list(key)
-        self.rotors = []
+        # Inicializace třídy Enigma. Bere dva parametry:
+        # 1. key - seznam znaků, který slouží jako počáteční klíč pro rotory.
+        # 2. rotors - seznam objektů (pravděpodobně typu Rotor).
+        self.key = list(key)  # Klíč je převeden na seznam znaků.
+        self.rotors = []  # Inicializace seznamu rotorů.
+
+        # Pro každý rotor ve vstupu vytvoří instanci Rotor s odpovídajícím klíčem.
         for i in range(0, len(rotors)):
             self.rotors.append(Rotor(self.key[i], rotors[i]))
 
     def encrypt(self, word):
-        cipher = ''
-        for i, char in enumerate(word.upper()):
+        # Metoda pro šifrování vstupního textu `word`.
+        cipher = ''  # Výsledný šifrovaný text.
+        
+        for i, char in enumerate(word.upper()):  # Pro každý znak ve vstupním slově.
+            # Získání vzdálenosti aktuálního znaku od daného rotoru (zřejmě posun).
             distance = self.rotors[i % 2].get_distance(char)
+            
+            # Rotace třetího rotoru na základě vzdálenosti a indexu (i+1) % 2.
+            # Výsledek přidá do zašifrovaného textu.
             cipher += self.rotors[2].rotate((i + 1) % 2, distance)
-        return cipher
+        
+        return cipher  # Vrací šifrovaný text.
 
     def decrypt(self, cipher):
-        word = ''
-        for i, char in enumerate(cipher.upper()):
+        # Metoda pro dešifrování šifrovaného textu `cipher`.
+        word = ''  # Výsledný dešifrovaný text.
+        
+        for i, char in enumerate(cipher.upper()):  # Pro každý znak v šifrovaném textu.
+            # Získání vzdálenosti aktuálního znaku na třetím rotoru.
             distance = self.rotors[2].get_distance(char)
+            
+            # Rotace odpovídajícího rotoru a přidání výsledku do dešifrovaného textu.
             word += self.rotors[i % 2].rotate((i + 1) % 2, distance)
-        return word
+        
+        return word  # Vrací dešifrovaný text.
+
 
 
 def print_help():
@@ -38,34 +56,12 @@ def print_help():
 
 
 def main(argv):
-    try:
-        opts, args = getopt.getopt(argv, "hk:p:d", ["help", "key=", "phrase", "decrypt", "r1=", "r2=", "r3="])
-    except getopt.GetoptError:
-        print_help()
-        sys.exit(2)
-    key = ''
-    phrase = ''
-    encrypt = True
-    rotors = ['', '', '']
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            print_help()
-            sys.exit()
-        elif opt in ("-k", "--key"):
-            key = arg
-        elif opt in ("-p", "--phrase"):
-            phrase = arg
-        elif opt in ("-d", "--decrypt"):
-            encrypt = False
-        elif opt == "--r1":
-            rotors[0] = arg
-        elif opt == "--r2":
-            rotors[1] = arg
-        elif opt == "--r3":
-            rotors[2] = arg
+    volba = input("args: ")
+    phrase = input("phrase: ")
+    if volba in ("-d", "--decrypt"):
+        encrypt = False
 
-    if not key == '' and not phrase == '' and not rotors[0] == ''\
-            and not rotors[1] == '' and not rotors[2] == '':
+    if not phrase == '':
         machine = Enigma(key, rotors)
         if encrypt:
             print(machine.encrypt(phrase))
