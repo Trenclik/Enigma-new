@@ -1,74 +1,117 @@
-from rotor import Rotor
-import sys
+import random
+import numpy as np
 
+# Alphabet used by the Enigma machine
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-class Enigma:
-    def __init__(self, key, rotors):
-        # Inicializace třídy Enigma. Bere dva parametry:
-        # 1. key - seznam znaků, který slouží jako počáteční klíč pro rotory.
-        # 2. rotors - seznam objektů (pravděpodobně typu Rotor).
-        self.key = list(key)  # Klíč je převeden na seznam znaků.
-        self.rotors = []  # Inicializace seznamu rotorů.
+# Define possible rotor combinations and reflectors
+possible_rotor_combinations = [
+    "EKMFLGDQVZNTOWYHXUSPAIBRCJD",  # Rotor I
+    "AJDKSIRUXBLHWTMCQGZNPYFVOECA",  # Rotor II
+    "BDFHJLCPRTXVZNYEIWGAKMUSQO",  # Rotor III
+    "ESOVPZJAYQUIRHXLNFTGKDCMWB",  # Rotor IV
+    "VZBRGITYUPSDNHLXAWMJQOFECK",  # Rotor V
+]
 
-        # Pro každý rotor ve vstupu vytvoří instanci Rotor s odpovídajícím klíčem.
-        for i in range(0, len(rotors)):
-            self.rotors.append(Rotor(self.key[i], rotors[i]))
+possible_reflector_combinations = [
+    "YRUHQSLDPXNGOKMIEBFZCWVJAT",  # Reflector B
+    "FVPJIAOYEDRZXWGCTKUQSBNMHL",  # Reflector C
+]
 
-    def encrypt(self, word):
-        # Metoda pro šifrování vstupního textu `word`.
-        cipher = ''  # Výsledný šifrovaný text.
+def generate_random_plugboard_combination(nr_pairs=13):
+    plugboard = {}
+    free_indexes = np.linspace(0, 25, num=26, dtype='int')
+    final_combination = np.array(list(alphabet))
+
+    for _ in range(nr_pairs):
+        index1 = random.choice(free_indexes)
+        free_indexes = np.delete(free_indexes, np.where(free_indexes == index1))
+
+        index2 = random.choice(free_indexes)
+        free_indexes = np.delete(free_indexes, np.where(free_indexes == index2))
+
+        final_combination[index1] = alphabet[index2]
+        final_combination[index2] = alphabet[index1]
+
+    for letter, index in zip(alphabet, range(len(alphabet))):
+        plugboard[letter] = final_combination[index]
         
-        for i, char in enumerate(word.upper()):  # Pro každý znak ve vstupním slově.
-            # Získání vzdálenosti aktuálního znaku od daného rotoru (zřejmě posun).
-            distance = self.rotors[i % 2].get_distance(char)
-            
-            # Rotace třetího rotoru na základě vzdálenosti a indexu (i+1) % 2.
-            # Výsledek přidá do zašifrovaného textu.
-            cipher += self.rotors[2].rotate((i + 1) % 2, distance)
-        
-        return cipher  # Vrací šifrovaný text.
+    return plugboard
 
-    def decrypt(self, cipher):
-        # Metoda pro dešifrování šifrovaného textu `cipher`.
-        word = ''  # Výsledný dešifrovaný text.
-        
-        for i, char in enumerate(cipher.upper()):  # Pro každý znak v šifrovaném textu.
-            # Získání vzdálenosti aktuálního znaku na třetím rotoru.
-            distance = self.rotors[2].get_distance(char)
-            
-            # Rotace odpovídajícího rotoru a přidání výsledku do dešifrovaného textu.
-            word += self.rotors[i % 2].rotate((i + 1) % 2, distance)
-        
-        return word  # Vrací dešifrovaný text.
-
-
-
-def print_help():
-    print("\ncommand line arguments:\n" +
-          "-h/--help: all possible options\n" +
-          "-k/--key KEY: rotor starting key\n" +
-          "-p/--phrase Phrase: phrase to encrypt/decrypt\n" +
-          "-d/--decrypt: enables decrypt default is encrypt\n" +
-          "--r1 ROTOR: sets rotor 1\n" +
-          "--r2 ROTOR: sets rotor 2\n" +
-          "--r3 ROTOR: sets rotor 3\n" +
-          "possible rotors are 50, 51, 60, 61, 70 and 71\n")
-
-
-def main(argv):
-    volba = input("args: ")
-    phrase = input("phrase: ")
-    if volba in ("-d", "--decrypt"):
-        encrypt = False
-
-    if not phrase == '':
-        machine = Enigma(key, rotors)
-        if encrypt:
-            print(machine.encrypt(phrase))
-        else:
-            print(machine.decrypt(phrase))
+def run_plugboard(letter, letter_path, plugboard, is_reverse=False):
+    if not is_reverse:
+        new_letter = plugboard[letter]
+        letter_path = letter_path + " -> " + new_letter
     else:
-        print_help()
+        new_letter = list(plugboard.keys())[list(plugboard.values()).index(letter)]
+        letter_path = letter_path + " -> " + new_letter
+
+    return new_letter, letter_path
+
+def create_rotors(nr_rotors):
+    rotors = []
+    for _ in range(nr_rotors):
+        random_rotor_combination = random.choice(possible_rotor_combinations)
+        rotor = {alphabet[i]: random_rotor_combination[i] for i in range(len(alphabet))}
+        rotors.append(rotor)
+    return rotors
+
+def create_reflector():
+    random_reflector_combination = random.choice(possible_reflector_combinations)
+    reflector = {alphabet[i]: random_reflector_combination[i] for i in range(len(random_reflector_combination))}
+    return reflector
+
+def create_random_enigma_setup(nr_rotors):
+    plugboard = generate_random_plugboard_combination()
+    rotors = create_rotors(nr_rotors)
+    reflector = create_reflector()
+    return plugboard, rotors, reflector
+
+def run_rotors(letter, rotors, reflector):
+    new_letter = letter
+    for rotor in rotors:
+        new_letter = rotor[new_letter]
+    new_letter = reflector[new_letter]
+    for rotor in reversed(rotors):
+        new_letter = list(rotor.keys())[list(rotor.values()).index(new_letter)]
+    return new_letter
+
+def update_rotors(rotors, rotors_rotation):
+    rotors_rotation[0] += 1
+    for i in range(1, len(rotors_rotation)):
+        if rotors_rotation[i-1] % len(alphabet) == 0 and rotors_rotation[i-1] != 0:
+            rotors_rotation[i] += 1
+    return rotors
+
+def encode_letter(letter, plugboard, rotors, reflector, is_reverse=False):
+    path = ""
+    coded_letter, path = run_plugboard(letter, path, plugboard, is_reverse)
+    coded_letter = run_rotors(coded_letter, rotors, reflector)
+    coded_letter, path = run_plugboard(coded_letter, path, plugboard, is_reverse)
+    return coded_letter
+
+def decode_word(word, plugboard, rotors, reflector):
+    decoded_word = ""
+    for letter in word:
+        if letter in alphabet:  # Only decode valid letters
+            decoded_letter = encode_letter(letter, plugboard, rotors, reflector, is_reverse=True)
+            decoded_word += decoded_letter
+    return decoded_word
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    nr_rotors = 3
+    rotors_rotation = [0] * nr_rotors
+
+    plugboard, rotors, reflector = create_random_enigma_setup(nr_rotors)
+
+
+
+    while True:
+        word = input("Type word to decode (or type empty to exit):\n")
+        if word == "":
+            break
+        else:
+            word = word.upper()
+            decoded_word = decode_word(word, plugboard, rotors, reflector)
+            print("Decoded word: ", decoded_word)
+
