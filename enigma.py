@@ -4,20 +4,6 @@ import numpy as np
 # Alphabet used by the Enigma machine
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-# Define possible rotor combinations and reflectors
-possible_rotor_combinations = [
-    "EKMFLGDQVZNTOWYHXUSPAIBRCJD",  # Rotor I
-    "AJDKSIRUXBLHWTMCQGZNPYFVOECA",  # Rotor II
-    "BDFHJLCPRTXVZNYEIWGAKMUSQO",  # Rotor III
-    "ESOVPZJAYQUIRHXLNFTGKDCMWB",  # Rotor IV
-    "VZBRGITYUPSDNHLXAWMJQOFECK",  # Rotor V
-]
-
-possible_reflector_combinations = [
-    "YRUHQSLDPXNGOKMIEBFZCWVJAT",  # Reflector B
-    "FVPJIAOYEDRZXWGCTKUQSBNMHL",  # Reflector C
-]
-
 plugboard = {'A': np.str_('M'), 'B': np.str_('C'), 'C': np.str_('B'), 'D': np.str_('F'), 'E': np.str_('Z'), 'F': np.str_('D'), 'G': np.str_('J'), 'H': np.str_('O'), 'I': np.str_('L'), 'J': np.str_('G'), 'K': np.str_('W'), 'L': np.str_('I'), 'M': np.str_('A'), 'N': np.str_('S'), 'O': np.str_('H'), 'P': np.str_('U'), 'Q': np.str_('V'), 'R': np.str_('X'), 'S': np.str_('N'), 'T': np.str_('Y'), 'U': np.str_('P'), 'V': np.str_('Q'), 'W': np.str_('K'), 'X': np.str_('R'), 'Y': np.str_('T'), 'Z': np.str_('E')}
 rotors = [{'A': 'A', 'B': 'J', 'C': 'D', 'D': 'K', 'E': 'S', 'F': 'I', 'G': 'R', 'H': 'U', 'I': 'X', 'J': 'B', 'K': 'L', 'L': 'H', 'M': 'W', 'N': 'T', 'O': 'M', 'P': 'C', 'Q': 'Q', 'R': 'G', 'S': 'Z', 'T': 'N', 'U': 'P', 'V': 'Y', 'W': 'F', 'X': 'V', 'Y': 'O', 'Z': 'E'}, {'A': 'E', 'B': 'S', 'C': 'O', 'D': 'V', 'E': 'P', 'F': 'Z', 'G': 'J', 'H': 'A', 'I': 'Y', 'J': 'Q', 'K': 'U', 'L': 'I', 'M': 'R', 'N': 'H', 'O': 'X', 'P': 'L', 'Q': 'N', 'R': 'F', 'S': 'T', 'T': 'G', 'U': 'K', 'V': 'D', 'W': 'C', 'X': 'M', 'Y': 'W', 'Z': 'B'}, {'A': 'E', 'B': 'K', 'C': 'M', 'D': 'F', 'E': 'L', 'F': 'G', 'G': 'D', 'H': 'Q', 'I': 'V', 'J': 'Z', 'K': 'N', 'L': 'T', 'M': 'O', 'N': 'W', 'O': 'Y', 'P': 'H', 'Q': 'X', 'R': 'U', 'S': 'S', 'T': 'P', 'U': 'A', 'V': 'I', 'W': 'B', 'X': 'R', 'Y': 'C', 'Z': 'J'}]
 reflector = {'A': 'Y', 'B': 'R', 'C': 'U', 'D': 'H', 'E': 'Q', 'F': 'S', 'G': 'L', 'H': 'D', 'I': 'P', 'J': 'X', 'K': 'N', 'L': 'G', 'M': 'O', 'N': 'K', 'O': 'M', 'P': 'I', 'Q': 'E', 'R': 'B', 'S': 'F', 'T': 'Z', 'U': 'C', 'V': 'W', 'W': 'V', 'X': 'J', 'Y': 'A', 'Z': 'T'}
@@ -61,6 +47,8 @@ def decode_word(word, plugboard, rotors, reflector):
         if letter in alphabet:  # Only decode valid letters
             decoded_letter = encode_letter(letter, plugboard, rotors, reflector, is_reverse=True)
             decoded_word += decoded_letter
+        else:
+            decoded_word += " "
     return decoded_word
 
 if __name__ == '__main__':
