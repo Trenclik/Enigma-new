@@ -18,25 +18,9 @@ possible_reflector_combinations = [
     "FVPJIAOYEDRZXWGCTKUQSBNMHL",  # Reflector C
 ]
 
-def generate_random_plugboard_combination(nr_pairs=13):
-    plugboard = {}
-    free_indexes = np.linspace(0, 25, num=26, dtype='int')
-    final_combination = np.array(list(alphabet))
-
-    for _ in range(nr_pairs):
-        index1 = random.choice(free_indexes)
-        free_indexes = np.delete(free_indexes, np.where(free_indexes == index1))
-
-        index2 = random.choice(free_indexes)
-        free_indexes = np.delete(free_indexes, np.where(free_indexes == index2))
-
-        final_combination[index1] = alphabet[index2]
-        final_combination[index2] = alphabet[index1]
-
-    for letter, index in zip(alphabet, range(len(alphabet))):
-        plugboard[letter] = final_combination[index]
-        
-    return plugboard
+plugboard = {'A': np.str_('M'), 'B': np.str_('C'), 'C': np.str_('B'), 'D': np.str_('F'), 'E': np.str_('Z'), 'F': np.str_('D'), 'G': np.str_('J'), 'H': np.str_('O'), 'I': np.str_('L'), 'J': np.str_('G'), 'K': np.str_('W'), 'L': np.str_('I'), 'M': np.str_('A'), 'N': np.str_('S'), 'O': np.str_('H'), 'P': np.str_('U'), 'Q': np.str_('V'), 'R': np.str_('X'), 'S': np.str_('N'), 'T': np.str_('Y'), 'U': np.str_('P'), 'V': np.str_('Q'), 'W': np.str_('K'), 'X': np.str_('R'), 'Y': np.str_('T'), 'Z': np.str_('E')}
+rotors = [{'A': 'A', 'B': 'J', 'C': 'D', 'D': 'K', 'E': 'S', 'F': 'I', 'G': 'R', 'H': 'U', 'I': 'X', 'J': 'B', 'K': 'L', 'L': 'H', 'M': 'W', 'N': 'T', 'O': 'M', 'P': 'C', 'Q': 'Q', 'R': 'G', 'S': 'Z', 'T': 'N', 'U': 'P', 'V': 'Y', 'W': 'F', 'X': 'V', 'Y': 'O', 'Z': 'E'}, {'A': 'E', 'B': 'S', 'C': 'O', 'D': 'V', 'E': 'P', 'F': 'Z', 'G': 'J', 'H': 'A', 'I': 'Y', 'J': 'Q', 'K': 'U', 'L': 'I', 'M': 'R', 'N': 'H', 'O': 'X', 'P': 'L', 'Q': 'N', 'R': 'F', 'S': 'T', 'T': 'G', 'U': 'K', 'V': 'D', 'W': 'C', 'X': 'M', 'Y': 'W', 'Z': 'B'}, {'A': 'E', 'B': 'K', 'C': 'M', 'D': 'F', 'E': 'L', 'F': 'G', 'G': 'D', 'H': 'Q', 'I': 'V', 'J': 'Z', 'K': 'N', 'L': 'T', 'M': 'O', 'N': 'W', 'O': 'Y', 'P': 'H', 'Q': 'X', 'R': 'U', 'S': 'S', 'T': 'P', 'U': 'A', 'V': 'I', 'W': 'B', 'X': 'R', 'Y': 'C', 'Z': 'J'}]
+reflector = {'A': 'Y', 'B': 'R', 'C': 'U', 'D': 'H', 'E': 'Q', 'F': 'S', 'G': 'L', 'H': 'D', 'I': 'P', 'J': 'X', 'K': 'N', 'L': 'G', 'M': 'O', 'N': 'K', 'O': 'M', 'P': 'I', 'Q': 'E', 'R': 'B', 'S': 'F', 'T': 'Z', 'U': 'C', 'V': 'W', 'W': 'V', 'X': 'J', 'Y': 'A', 'Z': 'T'}
 
 def run_plugboard(letter, letter_path, plugboard, is_reverse=False):
     if not is_reverse:
@@ -47,25 +31,6 @@ def run_plugboard(letter, letter_path, plugboard, is_reverse=False):
         letter_path = letter_path + " -> " + new_letter
 
     return new_letter, letter_path
-
-def create_rotors(nr_rotors):
-    rotors = []
-    for _ in range(nr_rotors):
-        random_rotor_combination = random.choice(possible_rotor_combinations)
-        rotor = {alphabet[i]: random_rotor_combination[i] for i in range(len(alphabet))}
-        rotors.append(rotor)
-    return rotors
-
-def create_reflector():
-    random_reflector_combination = random.choice(possible_reflector_combinations)
-    reflector = {alphabet[i]: random_reflector_combination[i] for i in range(len(random_reflector_combination))}
-    return reflector
-
-def create_random_enigma_setup(nr_rotors):
-    plugboard = generate_random_plugboard_combination()
-    rotors = create_rotors(nr_rotors)
-    reflector = create_reflector()
-    return plugboard, rotors, reflector
 
 def run_rotors(letter, rotors, reflector):
     new_letter = letter
@@ -99,19 +64,12 @@ def decode_word(word, plugboard, rotors, reflector):
     return decoded_word
 
 if __name__ == '__main__':
-    nr_rotors = 3
-    rotors_rotation = [0] * nr_rotors
-
-    plugboard, rotors, reflector = create_random_enigma_setup(nr_rotors)
-
-
-
+    rotors_rotation = [0] * 3
     while True:
-        word = input("Type word to decode (or type empty to exit):\n")
+        word = input("Type word to decode (or type empty to exit): ")
         if word == "":
             break
         else:
             word = word.upper()
             decoded_word = decode_word(word, plugboard, rotors, reflector)
             print("Decoded word: ", decoded_word)
-
