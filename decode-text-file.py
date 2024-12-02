@@ -1,4 +1,3 @@
-import random
 import numpy as np
 
 # Alphabet used by the Enigma machine
@@ -53,11 +52,13 @@ def decode_word(word, plugboard, rotors, reflector):
 
 if __name__ == '__main__':
     rotors_rotation = [0] * 3
-    while True:
-        word = input("Type word to decode (or type empty to exit): ")
-        if word == "":
-            break
-        else:
-            word = word.upper()
-            decoded_word = decode_word(word, plugboard, rotors, reflector)
-            print("Decoded word: ", decoded_word)
+    
+    _word = open("text.txt", "r")
+    word = _word.read()
+    if word == "":
+        print("Žádný text")
+    else:
+        
+        word = word.upper()
+        decoded_word = decode_word(word, plugboard, rotors, reflector)
+        print("Decoded word: ", decoded_word)
