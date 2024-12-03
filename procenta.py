@@ -19,6 +19,8 @@ class Procenta():
         Výstup:
             list: list se stringy slov oddělených od sebe
         """
+        if not isinstance(text, str):
+            raise TypeError("Vstup musí být string!")
         if text == "":
             w.warn(f"Prázdný vstup do funkce {currentframe().f_code.co_name}. Funkce by měla stále fungovat ale výstup bude prázdný.")
         sliced = []
@@ -31,15 +33,17 @@ class Procenta():
                 slovo = ""
         return sliced
     
-    def vyber(procenta: int):
+    def vyber(slova: list ,procenta: int):
         """Náhodně vybere určité procento slov z listu a vrátí jiný list s vybranými slovy.
         Zapamatuje si dekódovaná slova aby nedošlo k chybám v dešifrování.
         
         Vstup:
+            slova (list): slova rozdělená do listu
             procenta (int): procento slov která budou zakódována
         Výstup:
             slova (list): náhodný výběr slov
         """
+        
         if not isinstance(procenta, int):
             raise TypeError("Vstup musí být celé číslo!")
         if procenta == 0:
@@ -50,5 +54,9 @@ class Procenta():
         if procenta >100:
             w.warn("Nelze vybrat číslo větší než 100! Měním na 100%")
             procenta = 100
+<<<<<<< Updated upstream
         #dodělat zbytek logiky
 Procenta.slice("")
+=======
+        
+>>>>>>> Stashed changes
