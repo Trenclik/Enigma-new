@@ -1,6 +1,8 @@
 import warnings as w
 from inspect import currentframe
+from random import choice
 class Procenta():
+    
     """třída pro náhodný výběr textu pro dešifrování podle zadaných procent\n
     slice()\n
     vyber()\n
@@ -43,7 +45,8 @@ class Procenta():
         Výstup:
             slova (list): náhodný výběr slov
         """
-        
+        pocet = 0
+        vyber = []
         if not isinstance(procenta, int):
             raise TypeError("Vstup musí být celé číslo!")
         if procenta == 0:
@@ -54,9 +57,6 @@ class Procenta():
         if procenta >100:
             w.warn("Nelze vybrat číslo větší než 100! Měním na 100%")
             procenta = 100
-<<<<<<< Updated upstream
-        #dodělat zbytek logiky
-Procenta.slice("")
-=======
-        
->>>>>>> Stashed changes
+            
+        for i in int(pocet):
+            slova.choice()
