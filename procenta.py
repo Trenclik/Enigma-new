@@ -1,9 +1,9 @@
 import warnings as w
 from inspect import currentframe
 class Procenta():
-    """třída pro náhodný výběr textu pro dešifrování podle zadaných procent
-    slice:
-        
+    """třída pro náhodný výběr textu pro dešifrování podle zadaných procent\n
+    slice()\n
+    vyber()\n
     """
     
     def custom_showwarning(message, category, filename, lineno, file=None, line=None):
@@ -51,3 +51,4 @@ class Procenta():
             w.warn("Nelze vybrat číslo větší než 100! Měním na 100%")
             procenta = 100
         #dodělat zbytek logiky
+Procenta.slice("")
