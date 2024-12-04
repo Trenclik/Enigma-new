@@ -29,17 +29,20 @@ class Procenta():
         sliced = []
         slovo = ""
         flag = False
-        for i in text + " ": # předělat
-            if flag == True:
-                pass
+        for i in text + " ":
             if i == "!":
                 flag = True
-            if i != " ":
-                slovo += i
+            if i == " ":
+                if flag == True:
+                    flag = False
+                    slovo = ""
+                    pass
+                else:
+                    flag = False
+                    sliced.append(slovo)
+                    slovo = ""
             else:
-                flag = False
-                sliced.append(slovo)
-                slovo = ""
+                slovo += i
         return sliced
     
     def vyber(slova: list ,procenta: int):
@@ -67,6 +70,3 @@ class Procenta():
             
         for i in int(pocet):
             slova.choice()
-            
-            
-print(Procenta.slice("gaba je !skip negr"))
