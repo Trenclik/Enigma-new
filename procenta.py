@@ -25,12 +25,19 @@ class Procenta():
             raise TypeError("Vstup musí být string!")
         if text == "":
             w.warn(f"Prázdný vstup do funkce {currentframe().f_code.co_name}. Funkce by měla stále fungovat ale výstup bude prázdný.")
+        
         sliced = []
         slovo = ""
-        for i in text + " ":
+        flag = False
+        for i in text + " ": # předělat
+            if flag == True:
+                pass
+            if i == "!":
+                flag = True
             if i != " ":
                 slovo += i
             else:
+                flag = False
                 sliced.append(slovo)
                 slovo = ""
         return sliced
@@ -60,3 +67,6 @@ class Procenta():
             
         for i in int(pocet):
             slova.choice()
+            
+            
+print(Procenta.slice("gaba je !skip negr"))
