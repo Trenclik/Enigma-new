@@ -120,3 +120,10 @@ print(f"Dešifrované slovo: {desifrovane}")
 cesta_vstup = "vstupni_text.txt"
 cesta_vystup = "vystupni_text.txt"
 enigma.zpracovat_textovy_soubor(cesta_vstup, procento=50, vystupni_cesta=cesta_vystup)
+```
+
+# Autoři
+- [Martin Brunclík](https://github.com/Trenclik)
+- [Daniel Bock](https://github.com/B0CK07)
+- [Jakub Kořínský](https://github.com/KakubJorinsky)
+- [Daniel Holý](https://github.com/DanielHoly27)
