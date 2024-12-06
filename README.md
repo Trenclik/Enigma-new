@@ -1,4 +1,4 @@
-# Dokumentace **SifrovaciStrojEnigma**
+# **SifrovaciStrojEnigma**
 
 Tato knihovna implementuje simulaci šifrovacího stroje Enigma a poskytuje funkcionalitu pro šifrování, dešifrování a zpracování textových souborů.
 
